@@ -201,8 +201,15 @@ def draw_cat():
     draw_line(cat_x-45, cat_y-115, cat_x-49, cat_y-132)
     draw_line(cat_x+14,cat_y-137, cat_x+59, cat_y-112)
     draw_line(cat_x+36,cat_y-158, cat_x+59, cat_y-112)
+    glPointSize(5)
+    glColor3f(1,0.8,0.8)
+    draw_line(cat_x-34,cat_y-147, cat_x-38, cat_y-139)
+    draw_line(cat_x-29,cat_y-143, cat_x-38, cat_y-139)
+    draw_line(cat_x+28,cat_y-143, cat_x+38, cat_y-139)
+    draw_line(cat_x+33,cat_y-147, cat_x+38, cat_y-139)
 
     #mouth
+    glColor3f(0,0,0)
     if eating==False:
         glPointSize(0.5)
         draw_line(cat_x-10,cat_y-202, cat_x-5, cat_y-206)
