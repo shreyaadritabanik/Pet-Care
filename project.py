@@ -13,6 +13,8 @@ food_pan_empty = False
 eating = False
 nose = (0,0)
 hungry=10
+health =5
+unhappy = False
 food.append((233, -265))
 food.append((253, -265))
 food.append((243, -265))
@@ -146,7 +148,7 @@ def circlepoints(x,y,center):
     glVertex2f(-x0+ax,y0+ay)
     glEnd()
 def draw_cat():
-    global cat_x, cat_y, eating, nose
+    global cat_x, cat_y, eating, nose, unhappy
     glColor3f(0, 0, 0)
     
     # Head
@@ -210,15 +212,19 @@ def draw_cat():
 
     #mouth
     glColor3f(0,0,0)
-    if eating==False:
+    if eating==False and unhappy==False:
         glPointSize(0.5)
         draw_line(cat_x-10,cat_y-202, cat_x-5, cat_y-206)
         draw_line(cat_x-5, cat_y-206, cat_x-1, cat_y-201)
         draw_line(cat_x+5, cat_y-206, cat_x-1, cat_y-201)
         draw_line(cat_x+5, cat_y-206, cat_x+9, cat_y-202)
-    else:
+    elif eating==True and unhappy==False:
         glPointSize(1)
         circle(3,(cat_x,cat_y-205))
+    elif unhappy==True:
+        glPointSize(1)
+        draw_line(cat_x-5, cat_y-206, cat_x-1, cat_y-201)
+        draw_line(cat_x+5, cat_y-206, cat_x-1, cat_y-201)
 def draw_foodpan():
     global food_pan_empty, food
     glPointSize(4)
@@ -231,18 +237,33 @@ def draw_foodpan():
     glColor3f(0.26,0.09,0.09) 
     for item in food:
         circle(4, (item[0], item[1]))
-   
+def healthbar():
+    global health
+    a=-270
+    b=270
+    c=20
+    glPointSize(6)
+    glColor3f(0.4,0.8,0.4)
+    health=max(0,health)
+    for i in range(health):
+        circle(5,(a,b)) 
+        a+=c
 def showScreen():
-    global diamond_y,diamond_x,color
+    global health,unhappy
     glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     draw_cat()
     draw_foodpan()
-    
+    healthbar()
+    if health<=0 and unhappy==False:
+        print("!!!Your pet is unhappy!!!")
+        unhappy=True
+    elif health>0:
+        unhappy=False    
     glutSwapBuffers()
 
 def mouseFunc(button, state, x, y):
-    global food_pan_empty, food, eating, cat_x,cat_y, nose, hungry
+    global food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy
     nose=(cat_x,cat_y-195)
     a =x-(600/2)
     b = (600 /2)-y
@@ -254,6 +275,10 @@ def mouseFunc(button, state, x, y):
                     eating=True
                     food.pop()
                     hungry=max(0,hungry-1)
+                    health+=1
+                    health=min(health,4)
+                    if hungry==0:
+                        health=5
                 elif len(food)==1:
                     food.pop()
                     hungry=max(0,hungry-1)
@@ -300,14 +325,16 @@ def specialKeyListener(key,x, y):
 
     glutPostRedisplay() 
 def hungry_announce(val):
-    global hungry 
+    global hungry,health
     glutTimerFunc(6000, hungry_announce, 0)
     if hungry==11:
+        health-=1
         print("HUMGRYYY GIB FOOD")    
     elif hungry==0:
         print("I am full")
     hungry+=1
     hungry=min(11,hungry)   
+    glutPostRedisplay()
 def init():
     glClearColor(1,1,1,1)
     glMatrixMode(GL_PROJECTION)
