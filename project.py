@@ -3,6 +3,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import random
 import math
+#HEALTH=5 IS BEST UPPER LEFT SHOWS HEALTH BAR. HUNGER AND SLEEP CAN EFFECT HEALTH.
 #HUNGRY AFTER FIRST 9 SECONDS.hunger increases by 1 after every 6 seconds and extremely hungry when hunger is 11
 cat_x = 0.0
 cat_y = -50
