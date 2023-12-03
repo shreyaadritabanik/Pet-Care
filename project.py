@@ -251,7 +251,7 @@ def draw_cat():
         draw_line(cat_x+5, cat_y-206, cat_x-1, cat_y-201)
 
     #tail
-    glPointSize(3)
+    glPointSize(2)
     glColor3f(0,0,0)
     draw_line(cat_x-30, cat_y-240, cat_x-50,cat_y-225)
     draw_line(cat_x-27, cat_y-235, cat_x-50,cat_y-215)
@@ -294,7 +294,7 @@ def draw_bed():
         glPointSize(3)
         circle(5, (xaxis-582, yaxis-567))
 def draw_window():
-    global day, play
+    global day, play, n2d, d2n
     glColor3f(0,0,0)
     glPointSize(2)
     #window
@@ -304,14 +304,36 @@ def draw_window():
         draw_line(-width + 400, height - 400, -width + 400, height - 600)
         draw_line(width - 600, height-400, width - 600, height - 600)
         #sky
-        if day >= 0.9:
-            glColor3f(0,0.8,1)
+        if day > 0.9:
+            glColor3f(0,0.7,1)
         else:
-            g= max(0.1, day-0.2)
+            g= max(0.1, day-0.4)
             b= max(0.1, day-0.2)
             glColor3f(0,g,b)
         glPointSize(198)
         draw_line(-width + 500, height - 500, width - 699, height-500)
+        #sun
+        if 0.4<day<=1: 
+            h = height
+            inc = 0
+            if day == 1:
+                glColor3f(1,1,0)
+            elif 0.9 >= day > 0.4:
+                glColor3f(day-.2,day-.2,0)
+            if d2n == True and day < 1:
+                h = height - (1-day)*200
+            elif n2d == True and day < 1:
+                h = height - (1-day)*200 + inc
+                inc += 1
+            glPointSize(5)
+            circle(15, (-width + 450, h - 450))
+            circle(10, (-width + 450, h - 450))
+            circle(5, (-width + 450, h - 450))
+            glPointSize(2)
+            draw_line (-width + 425, h - 450, -width + 475, h-450)
+            draw_line (-width + 450, h - 425, -width + 450, h-475)
+            draw_line (-width + 435, h - 430, -width + 465, h - 470)
+            draw_line(-width + 435, h - 470, -width + 465, h - 430)
         #window cross
         glColor3f(0,0,0)
         glPointSize(2)
@@ -327,14 +349,36 @@ def draw_window():
         
         draw_line(width - 400, height-400, width - 400, height - 600)
         #sky
-        if day >= 0.9:
-            glColor3f(0,0.8,1)
+        if day > 0.9:
+            glColor3f(0,0.7,1)
         else:
-            g= max(0.1, day-0.2)
+            g= max(0.1, day-0.4)
             b= max(0.1, day-0.2)
             glColor3f(0,g,b)
         glPointSize(198)
         draw_line(-width + 500, height - 500, width - 499, height-500)
+        #sun
+        if 0.4<day<=1: 
+            h = height
+            inc = 0
+            if day == 1:
+                glColor3f(1,1,0)
+            elif 0.9 >= day > 0.4:
+                glColor3f(day-.2,day-.2,0)
+            if d2n == True and day < 1:
+                h = height - (1-day)*200
+            elif n2d == True and day < 1:
+                h = height - (1-day)*200 + inc
+                inc += 1
+            glPointSize(5)
+            circle(15, (-width + 450, h - 450))
+            circle(10, (-width + 450, h - 450))
+            circle(5, (-width + 450, h - 450))
+            glPointSize(2)
+            draw_line (-width + 425, h - 450, -width + 475, h-450)
+            draw_line (-width + 450, h - 425, -width + 450, h-475)
+            draw_line (-width + 435, h - 430, -width + 465, h - 470)
+            draw_line(-width + 435, h - 470, -width + 465, h - 430)
         #window cross
         glColor3f(0,0,0)
         glPointSize(2)
@@ -343,21 +387,7 @@ def draw_window():
         draw_line(width -700, height - 400, width - 700, height-600)
         draw_line(-width + 400, height - 500, width - 400, height-500)
         draw_line(width -500, height - 400, width - 500, height-600)
-        
-
     
-    #sun
-    if day > 0.4:
-        glColor3f(day,day,0)
-        glPointSize(5)
-        circle(15, (-width + 450, height - 450))
-        circle(10, (-width + 450, height - 450))
-        circle(5, (-width + 450, height - 450))
-        glPointSize(2)
-        draw_line (-width + 425, height - 450, -width + 475, height-450)
-        draw_line (-width + 450, height - 425, -width + 450, height-475)
-        draw_line (-width + 435, height - 430, -width + 465, height - 470)
-        draw_line(-width + 435, height - 470, -width + 465, height - 430)
 def playbutton():
     global play
     glColor3f(0,0.4,1)
@@ -605,9 +635,10 @@ def hungry_announce(val):
             print("I am hungry. Let's go eat")   
         elif hungry==11 and play==True:
             health-=1
-            print("Enough playing. Let's go eat first")
-        elif hungry==0:
-            print("I am full")
+            if health <= 2:
+                print("Enough playing. Let's go eat first")
+        # elif hungry==0:
+        #     print("I am full")
         hungry+=0.5
         hungry=min(11,hungry)   
     glutPostRedisplay()
@@ -619,11 +650,11 @@ def sleep_announce(val):
     glutPostRedisplay()   
 def day_announce(val):
     global day, d2n, n2d, sleep
-    glutTimerFunc(5000, day_announce, 0)
+    glutTimerFunc(6000, day_announce, 0)
     if day <= 0.1:
         n2d = True
         d2n = False
-    if day >=0.9:
+    if day >=1:
         d2n = True
         n2d = False
     if n2d == True and day < 1:
