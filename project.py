@@ -22,7 +22,7 @@ sleep = False
 day = 1
 d2n = True
 n2d = False
-play = True
+play = False
 
 food.append((xaxis-67, -(yaxis-35)))
 food.append((xaxis-57, -(yaxis-35)))
@@ -444,7 +444,7 @@ def mouseFunc(button, state, x, y):
     b = (600 /2)-y
     zzz = False
     #eat or not eat xaxis = 300, yaxis = 300
-    if (xaxis-80) <= a <= (xaxis-6) and -(yaxis-11) <= b <= -(yaxis-30)  and 170<=cat_x<=230:
+    if play == False and (xaxis-80) <= a <= (xaxis-6) and -(yaxis-11) <= b <= -(yaxis-30)  and 170<=cat_x<=230:
         if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
             if not food_pan_empty:
                 if len(food) > 1 and hungry != 0:
@@ -490,25 +490,31 @@ def mouseFunc(button, state, x, y):
 
     #sleep or no sleep
 
-    if 0<=x<=100 and height-40<=y<=height and -xaxis+60 <=cat_x<-xaxis+160:
+    if play == False and 0<=x<=100 and height-40<=y<=height and -xaxis+60 <=cat_x<-xaxis+160:
         if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
             if day > 0.4 and sleep == False:
-                print("It's still day! Play some more")
-            elif hungry == True or unhappy == True:
+                print("It's still day! You should playy!")
+            elif unhappy == True:
                 print("Eat first.")
             else:
                 zzz = True
     if zzz == True and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and sleep == False:
         sleep = True
+        cat_y += 20
+        cat_x = -230
     if sleep == True and button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
         sleep = False
+        cat_y -= 20
         if day <= 0.4:
             print('Sleep some more.')
     
     if width-370<=a<=width-320 and height-370<=b<=height-350:
         if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
             if play == False:
-                play = True
+                if unhappy == False:
+                    play = True
+                else:
+                    print("To play, you need to eat first.")
             else:
                 play = False
 
