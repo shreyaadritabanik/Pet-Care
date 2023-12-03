@@ -23,7 +23,8 @@ day = 1
 d2n = True
 n2d = False
 play = False
-
+ballx=-280
+goal=True
 food.append((xaxis-67, -(yaxis-35)))
 food.append((xaxis-57, -(yaxis-35)))
 food.append((xaxis-47, -(yaxis-35)))
@@ -265,7 +266,7 @@ def draw_cat():
     circle(3, (cat_x-17, cat_y-243))
     circle(3, (cat_x, cat_y-243))
 def draw_foodpan():
-    global food_pan_empty, food, play
+    global food_pan_empty, food, play, xaxis, yaxis 
     if play == False:
         glPointSize(4)
         glColor3f(1,0.2,0.2)
@@ -342,6 +343,7 @@ def draw_window():
         draw_line(width -700, height - 400, width - 700, height-600)
         draw_line(-width + 400, height - 500, width - 400, height-500)
         draw_line(width -500, height - 400, width - 500, height-600)
+        
 
     
     #sun
@@ -408,6 +410,27 @@ def playbutton():
         draw_line(width - 331, height - 361, width-331, height-356)
         draw_line(width - 335, height - 355,width - 331, height - 356)
         draw_line(width - 331, height - 361, width-335, height-361)
+def playroomtoys():
+    #ball
+    glPointSize(4)
+    glColor3f(1,0,0)
+    circle(16,(ballx,-275))
+    glColor3f(1,0,1)
+    circle(11,(ballx,-275))
+    glColor3f(1,0,0)
+    circle(7,(ballx,-275))
+    circle(4,(ballx,-275))
+    #goalpost
+    if goal==True:
+        glColor3f(0,0,0)
+        draw_line(290,-290,290,-220)
+        draw_line(250,-280,250,-210)
+        draw_line(290,-220,250,-210)
+    else:
+        glColor3f(0,0,0)
+        draw_line(-290,-290,-290,-220)
+        draw_line(-250,-280,-250,-210)
+        draw_line(-290,-220,-250,-210)
 
 
 def healthbar():
@@ -431,6 +454,8 @@ def showScreen():
     draw_bed()
     playbutton()
     draw_window()
+    if play==True and sleep==False:
+        playroomtoys()
     if health<=0 and unhappy==False:
         print("!!!Your pet is unhappy!!!")
         unhappy=True
@@ -512,7 +537,10 @@ def mouseFunc(button, state, x, y):
         if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
             if play == False:
                 if unhappy == False:
-                    play = True
+                    if sleep==True:
+                        print("To play, you need energy. Finish sleeping.")
+                    else:
+                        play = True
                 else:
                     print("To play, you need to eat first.")
             else:
@@ -535,16 +563,36 @@ def specialKeyListener(key,x, y):
         cat_x += 10.0
 
     glutPostRedisplay() 
+def keyboardListener(key, x,y):
+    global ballx,cat_x,goal
+    if play==True and key== b'w' and abs(cat_x-ballx)<=40:
+        ballx+=40
+        if ballx>270:
+            ballx=280
+            goal=False
+            print("Yay goal!")
+    if play==True and key== b'q' and abs(cat_x-ballx)<=40:     
+        ballx-=40
+        if ballx<-270:
+            ballx=-280  
+            goal=True 
+            print("Yay goal!")
+        
+          
+    glutPostRedisplay()         
 def hungry_announce(val):
     global hungry,health, sleep
     glutTimerFunc(6000, hungry_announce, 0)
     if sleep == False:
-        if hungry==11:
+        if hungry==11 and play==False:
             health-=1
-            print("HUMGRYYY GIB FOOD")    
+            print("I am hungry. Let's go eat")   
+        elif hungry==11 and play==True:
+            health-=1
+            print("Enough playing. Let's go eat first")
         elif hungry==0:
             print("I am full")
-        hungry+=1
+        hungry+=0.5
         hungry=min(11,hungry)   
     glutPostRedisplay()
 
@@ -587,6 +635,7 @@ init()
 glutDisplayFunc(showScreen)   
 glutSpecialFunc(specialKeyListener)
 glutMouseFunc(mouseFunc)
+glutKeyboardFunc(keyboardListener) 
 glutTimerFunc(3000, hungry_announce, 0)
 glutTimerFunc(3000, sleep_announce, 0)
 glutTimerFunc(3000, day_announce, 0)
