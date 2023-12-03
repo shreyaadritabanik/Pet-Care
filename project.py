@@ -5,7 +5,7 @@ import random
 import math
 width, height = 600, 600
 #HEALTH=5 IS BEST UPPER LEFT SHOWS HEALTH BAR. HUNGER AND SLEEP CAN EFFECT HEALTH.
-#HUNGRY AFTER FIRST 9 SECONDS.hunger increases by 1 after every 6 seconds and extremely hungry when hunger is 11
+#HUNGRY AFTER FIRST 15 SECONDS.hunger increases by 1 after every 6 seconds and extremely hungry when hunger is 11
 xaxis= width/2
 yaxis =height/2
 cat_x = 0.0
@@ -435,9 +435,25 @@ def playroomtoys():
 
 def healthbar():
     global health
-    a=-(xaxis-30)
+    a=-(xaxis-50)
     b=yaxis-30
     c=20
+    glPointSize(4)
+    glColor3f(1,0,0)
+    draw_line(-285,275,-280,263)
+    draw_line(-275,275,-280,263)
+    circle(1,(-280,270))
+    circle(1,(-285,273))
+    circle(1,(-275,273))
+    draw_line(-286,275,-280,263)
+    draw_line(-274,275,-280,263)
+
+    glPointSize(2)
+    glColor3f(0,0,0)
+    circle(12,(-280,270))
+    draw_line(-270,280,-155,280)
+    draw_line(-270,260,-155,260)
+    draw_line(-155,280,-155,260)
     glPointSize(6)
     glColor3f(0.4,0.8,0.4)
     health=max(0,health)
