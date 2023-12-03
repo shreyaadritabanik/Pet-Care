@@ -22,6 +22,7 @@ sleep = False
 day = 1
 d2n = True
 n2d = False
+play = True
 
 food.append((xaxis-67, -(yaxis-35)))
 food.append((xaxis-57, -(yaxis-35)))
@@ -264,49 +265,85 @@ def draw_cat():
     circle(3, (cat_x-17, cat_y-243))
     circle(3, (cat_x, cat_y-243))
 def draw_foodpan():
-    global food_pan_empty, food
-    glPointSize(4)
-    glColor3f(1,0.2,0.2)
-    draw_line((xaxis-80) ,-(yaxis-30),(xaxis-6),-(yaxis-30)) #220,294
-    draw_line((xaxis-66) ,-(yaxis-11),(xaxis-20) ,-(yaxis-11)) #234.0 ,-289.0,281.0, -289.0
-    draw_line((xaxis-80) ,-(yaxis-30), (xaxis-66),-(yaxis-11)) #220.0 ,-270.0,234.0 ,-289.0
-    draw_line((xaxis-20), -(yaxis-11), (xaxis-6), -(yaxis-30)  )#281.0, -289.0,294.0 ,-270.0
-    glPointSize(3)
-    glColor3f(0.26,0.09,0.09) 
-    for item in food:
-        circle(4, (item[0], item[1]))
+    global food_pan_empty, food, play
+    if play == False:
+        glPointSize(4)
+        glColor3f(1,0.2,0.2)
+        draw_line((xaxis-80) ,-(yaxis-30),(xaxis-6),-(yaxis-30)) #220,294
+        draw_line((xaxis-66) ,-(yaxis-11),(xaxis-20) ,-(yaxis-11)) #234.0 ,-289.0,281.0, -289.0
+        draw_line((xaxis-80) ,-(yaxis-30), (xaxis-66),-(yaxis-11)) #220.0 ,-270.0,234.0 ,-289.0
+        draw_line((xaxis-20), -(yaxis-11), (xaxis-6), -(yaxis-30)  )#281.0, -289.0,294.0 ,-270.0
+        glPointSize(3)
+        glColor3f(0.26,0.09,0.09) 
+        for item in food:
+            circle(4, (item[0], item[1]))
 def draw_bed():
-    glPointSize(5)
-    glColor3f(0,0,0)
-    # draw_line(xaxis - 590, yaxis -550, xaxis-500, yaxis-550)
-    draw_line(xaxis - 590, yaxis -580, xaxis-500, yaxis-580)
-    draw_line(xaxis - 590, yaxis -550, xaxis-590, yaxis-590)
-    draw_line(xaxis - 500, yaxis -580, xaxis-500, yaxis-590)
-    glColor3f(.4,.2,0.05)
-    draw_line(xaxis - 585, yaxis -575, xaxis-500, yaxis-575)
-    #pillow
-    glColor3f(.7,.2,0.05)
-    glPointSize(3)
-    circle(5, (xaxis-582, yaxis-567))
+    global play
+    if play == False:
+        glPointSize(5)
+        glColor3f(0,0,0)
+        # draw_line(xaxis - 590, yaxis -550, xaxis-500, yaxis-550)
+        draw_line(xaxis - 590, yaxis -580, xaxis-500, yaxis-580)
+        draw_line(xaxis - 590, yaxis -550, xaxis-590, yaxis-590)
+        draw_line(xaxis - 500, yaxis -580, xaxis-500, yaxis-590)
+        glColor3f(.4,.2,0.05)
+        draw_line(xaxis - 585, yaxis -575, xaxis-500, yaxis-575)
+        #pillow
+        glColor3f(.7,.2,0.05)
+        glPointSize(3)
+        circle(5, (xaxis-582, yaxis-567))
 def draw_window():
-    global day
+    global day, play
     glColor3f(0,0,0)
     glPointSize(2)
-    draw_line(-width + 400, height - 400, width - 600, height-400)
-    draw_line(-width + 400, height - 600, width - 600, height-600)
-    draw_line(-width + 400, height - 400, -width + 400, height - 600)
-    draw_line(width - 600, height-400, width - 600, height - 600)
+    #window
+    if play == False:
+        draw_line(-width + 400, height - 400, width - 600, height-400)
+        draw_line(-width + 400, height - 600, width - 600, height-600)
+        draw_line(-width + 400, height - 400, -width + 400, height - 600)
+        draw_line(width - 600, height-400, width - 600, height - 600)
+        #sky
+        if day >= 0.9:
+            glColor3f(0,0.8,1)
+        else:
+            g= max(0.1, day-0.2)
+            b= max(0.1, day-0.2)
+            glColor3f(0,g,b)
+        glPointSize(198)
+        draw_line(-width + 500, height - 500, width - 699, height-500)
+        #window cross
+        glColor3f(0,0,0)
+        glPointSize(2)
+        draw_line(width -700, height - 400, width - 700, height-600)
+        draw_line(-width + 400, height - 500, width - 600, height-500)
 
-    #sky
-    if day >= 0.9:
-        glColor3f(0,0.8,1)
-    else:
-        g= max(0.1, day-0.2)
-        b= max(0.1, day-0.2)
-        glColor3f(0,g,b)
 
-    glPointSize(198)
-    draw_line(-width + 500, height - 500, width - 699, height-500)
+    #PLAYROOM
+    else: 
+        draw_line(-width + 400, height - 400, width - 400, height-400)
+        draw_line(-width + 400, height - 600, width - 400, height-600)
+        draw_line(-width + 400, height - 400, -width + 400, height - 600)
+        
+        draw_line(width - 400, height-400, width - 400, height - 600)
+        #sky
+        if day >= 0.9:
+            glColor3f(0,0.8,1)
+        else:
+            g= max(0.1, day-0.2)
+            b= max(0.1, day-0.2)
+            glColor3f(0,g,b)
+        glPointSize(198)
+        draw_line(-width + 500, height - 500, width - 499, height-500)
+        #window cross
+        glColor3f(0,0,0)
+        glPointSize(2)
+        draw_line(width - 600, height-400, width - 600, height - 600)
+        draw_line(width -700, height - 400, width - 700, height-600)
+        draw_line(width -700, height - 400, width - 700, height-600)
+        draw_line(-width + 400, height - 500, width - 400, height-500)
+        draw_line(width -500, height - 400, width - 500, height-600)
+
+    
     #sun
     if day > 0.4:
         glColor3f(day,day,0)
@@ -319,11 +356,60 @@ def draw_window():
         draw_line (-width + 450, height - 425, -width + 450, height-475)
         draw_line (-width + 435, height - 430, -width + 465, height - 470)
         draw_line(-width + 435, height - 470, -width + 465, height - 430)
-    #window cross
-    glColor3f(0,0,0)
+def playbutton():
+    global play
+    glColor3f(0,0.4,1)
     glPointSize(2)
-    draw_line(width -700, height - 400, width - 700, height-600)
-    draw_line(-width + 400, height - 500, width - 600, height-500)
+    #box
+    draw_line(width - 320, height - 350, width - 370, height- 350)
+    draw_line(width - 320, height - 370, width - 370, height- 370)
+    draw_line(width - 315, height - 365, width-315, height-355)
+    draw_line(width - 375, height - 365, width-375, height-355)
+
+    draw_line(width - 370, height - 350, width-375, height-355)
+    draw_line(width - 370, height- 370, width-375, height-365)
+    draw_line(width - 320, height - 350, width-315, height-355)
+    draw_line(width - 320, height - 370, width - 315, height - 365)
+    
+    #play
+    glPointSize(2)
+    if play == False:
+        #P
+        draw_line(width - 365, height - 365, width-365, height-355)
+        draw_line(width - 361, height - 361, width-361, height-356)
+        draw_line(width - 365, height - 355,width - 361, height - 356)
+        draw_line(width - 361, height - 361, width-365, height-361)
+        #L
+        draw_line(width - 353, height - 365, width-353, height-355)
+        draw_line(width - 353, height - 365, width-348, height - 365)
+        #A
+        draw_line(width - 337, height - 365, width-340, height-355) #\
+        draw_line(width - 343, height - 365, width-340, height-354) #/
+        draw_line(width - 337, height-362, width-342,height-362)
+        #Y
+        draw_line(width - 330, height - 362, width-333, height-355) #-10
+        draw_line(width - 330, height - 362, width-327, height-355)
+        draw_line(width - 330, height - 362, width-330, height-366)
+    else:
+        #stop
+        # S
+        draw_line(width - 365, height - 355, width - 360, height-355)
+        draw_line(width - 365, height - 360, width - 360, height-360)
+        draw_line(width - 365, height - 365, width - 360, height-365)
+        draw_line(width - 365, height - 355, width - 365, height-360)
+        draw_line(width - 360, height-360, width - 360, height-365)
+        #T
+        draw_line(width - 357, height - 355, width - 350, height-355)
+        draw_line(width - 354, height - 355, width - 354, height-365)
+        #O
+        circle(4.3, (width-343, height-360))
+        #P
+        draw_line(width - 335, height - 365, width-335, height-355)
+        draw_line(width - 331, height - 361, width-331, height-356)
+        draw_line(width - 335, height - 355,width - 331, height - 356)
+        draw_line(width - 331, height - 361, width-335, height-361)
+
+
 def healthbar():
     global health
     a=-(xaxis-30)
@@ -343,6 +429,7 @@ def showScreen():
     draw_foodpan()
     healthbar()
     draw_bed()
+    playbutton()
     draw_window()
     if health<=0 and unhappy==False:
         print("!!!Your pet is unhappy!!!")
@@ -350,9 +437,8 @@ def showScreen():
     elif health>0:
         unhappy=False    
     glutSwapBuffers()
-
 def mouseFunc(button, state, x, y):
-    global food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
+    global play, food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
     nose=(cat_x,cat_y-195)
     a = x-(600/2) 
     b = (600 /2)-y
@@ -388,7 +474,6 @@ def mouseFunc(button, state, x, y):
                 food.append((xaxis-37, -(yaxis-35)))
                 food.append((xaxis-27, -(yaxis-35)))
                 food.append((xaxis-17, -(yaxis-35)))  
-
                 food.append((xaxis-63, -(yaxis-45)))
                 food.append((xaxis-53, -(yaxis-45)))
                 food.append((xaxis-43, -(yaxis-45)))
@@ -419,6 +504,15 @@ def mouseFunc(button, state, x, y):
         sleep = False
         if day <= 0.4:
             print('Sleep some more.')
+    
+    if width-370<=a<=width-320 and height-370<=b<=height-350:
+        if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
+            if play == False:
+                play = True
+            else:
+                play = False
+
+    
     glutPostRedisplay()
 
 def come_down(val):
