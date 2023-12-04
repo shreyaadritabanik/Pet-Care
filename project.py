@@ -752,6 +752,7 @@ def mouseFunc(button, state, x, y):
                 if fishON == True:
                     print("Fishing game Final Score: ", fishgamepoint)
                     fishON = False
+                    fishgamepoint = 0
                 ballbuttonON = False
     
     
