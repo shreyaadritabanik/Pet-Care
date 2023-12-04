@@ -25,6 +25,11 @@ n2d = False
 play = False
 ballx=-280
 goal=True
+fireworkCircleRadius = 0.5
+fireworksCircleSpeed = 6
+fireworksCircleColor = [1,0,0]
+firework = False
+fireworkLst = []
 food.append((xaxis-67, -(yaxis-35)))
 food.append((xaxis-57, -(yaxis-35)))
 food.append((xaxis-47, -(yaxis-35)))
@@ -157,6 +162,7 @@ def circlepoints(x,y,center):
     glVertex2f(-y0+ax,x0+ay)
     glVertex2f(-x0+ax,y0+ay)
     glEnd()
+
 def draw_cat():
     global cat_x, cat_y, eating, nose, unhappy, sleep
     glColor3f(0, 0, 0)
@@ -166,7 +172,14 @@ def draw_cat():
     circle(40, (cat_x, cat_y-175))
     glPointSize(4)
     # Eyes
-    if sleep == False:
+    if firework == True:
+        glPointSize(2)
+        draw_line(cat_x+8,cat_y-182, cat_x+13,cat_y-173)
+        draw_line(cat_x+13,cat_y-175, cat_x+16,cat_y-183)
+
+        draw_line(cat_x-8,cat_y-182, cat_x-13,cat_y-173)
+        draw_line(cat_x-13,cat_y-173, cat_x-18,cat_y-182)
+    elif sleep == False:
         glColor3f(0, 0, 0)  # Black color for the eyes
         circle(3, (cat_x-10, cat_y-182))
         circle(3, (cat_x-10, cat_y-179))
@@ -236,7 +249,10 @@ def draw_cat():
 
     #mouth
     glColor3f(0,0,0)
-    if eating==False and unhappy==False:
+    if firework == True:
+        glPointSize(2)
+        circle(5,(cat_x,cat_y-205))
+    elif eating==False and unhappy==False:
         glPointSize(0.5)
         draw_line(cat_x-10,cat_y-202, cat_x-5, cat_y-206)
         draw_line(cat_x-5, cat_y-206, cat_x-1, cat_y-201)
@@ -334,11 +350,7 @@ def draw_window():
             draw_line (-width + 450, h - 425, -width + 450, h-475)
             draw_line (-width + 435, h - 430, -width + 465, h - 470)
             draw_line(-width + 435, h - 470, -width + 465, h - 430)
-        #window cross
-        glColor3f(0,0,0)
-        glPointSize(2)
-        draw_line(width -700, height - 400, width - 700, height-600)
-        draw_line(-width + 400, height - 500, width - 600, height-500)
+       
 
 
     #PLAYROOM
@@ -346,7 +358,6 @@ def draw_window():
         draw_line(-width + 400, height - 400, width - 400, height-400)
         draw_line(-width + 400, height - 600, width - 400, height-600)
         draw_line(-width + 400, height - 400, -width + 400, height - 600)
-        
         draw_line(width - 400, height-400, width - 400, height - 600)
         #sky
         if day > 0.9:
@@ -380,14 +391,23 @@ def draw_window():
             draw_line (-width + 435, h - 430, -width + 465, h - 470)
             draw_line(-width + 435, h - 470, -width + 465, h - 430)
         #window cross
+        
+def windowcross():
+    #window cross
+    if play == False:
         glColor3f(0,0,0)
-        glPointSize(2)
-        draw_line(width - 600, height-400, width - 600, height - 600)
+        glPointSize(1)
         draw_line(width -700, height - 400, width - 700, height-600)
-        draw_line(width -700, height - 400, width - 700, height-600)
-        draw_line(-width + 400, height - 500, width - 400, height-500)
-        draw_line(width -500, height - 400, width - 500, height-600)
-    
+        draw_line(-width + 400, height - 500, width - 600, height-500)
+    else:
+        glColor3f(0,0,0)
+        glPointSize(1)
+        draw_line(width - 600, height-402, width - 600, height - 598)
+        draw_line(width -700, height - 402, width - 700, height-598)
+        draw_line(width -700, height - 402, width - 700, height-598)
+        draw_line(-width + 400, height - 502, width - 400, height-502)
+        draw_line(width -500, height - 402, width - 500, height-598)
+
 def playbutton():
     global play
     glColor3f(0,0.4,1)
@@ -461,8 +481,71 @@ def playroomtoys():
         draw_line(-290,-290,-290,-220)
         draw_line(-250,-280,-250,-210)
         draw_line(-290,-220,-250,-210)
+def fcircle(radius,center): #(5,(1,2))
+    for _ in range(10):
+        d=1-radius
+        x=0
+        y=radius 
+        
+        glPointSize(3)
+        fcirclepoints(x,y,center)
+        while(x<y):
+            
+                if(d<0):
+                    d=d+ 2*x + 3
+                    x+=1
+                else:
+                    d= d+ 2*x - 2*y + 5 
+                    x+=1
+                    y-=1
+                if random.random() < 0.1:
+                    fcirclepoints(x,y,center)
+        radius -= 30
+def fcirclepoints(x,y,center):
+    global xaxis, yaxis, width, height
+    glBegin(GL_POINTS)
+    x0=x/xaxis
+    y0=y/yaxis
+    ax=center[0]/xaxis
+    ay=center[1]/yaxis
+    if play and (
+        x0 + ax <= width - 400
+        # and height - 800 <= y0 + ay <= height - 400
+    ):
+        # Perform transformations only for points within the window boundaries
 
-
+        glVertex2f(x0 + ax, y0 + ay)
+        glVertex2f(y0 + ax, x0 + ay)
+        glVertex2f(y0 + ax, -x0 + ay)
+        glVertex2f(x0 + ax, -y0 + ay)
+        glVertex2f(-x0 + ax, -y0 + ay)
+        glVertex2f(-y0 + ax, -x0 + ay)
+        glVertex2f(-y0 + ax, x0 + ay)
+        glVertex2f(-x0 + ax, y0 + ay)
+    glEnd()     
+     
+def fireworkDisplay():
+    global firework, fireworkLst, fireworkCircleRadius
+    if play == True and len(fireworkLst) > 0:
+        firework = True
+    else:
+        firework = False
+    for i in fireworkLst:
+        glColor3f(random.random(), random.random(), random.random()) 
+        fcircle(i[2], (i[0], i[1]))
+        if i[2] > 2 * height:
+            fireworkLst.remove(i)
+    #print(fireworkLst)
+def toclear():
+    glColor3f(1,1,1)
+    glPointSize(200)
+    draw_line(width-300, height+700, width-300, height-900)
+    glPointSize(100)
+    draw_line(width-850, height+700, width-850, height-900)
+    glPointSize(300)
+    draw_line(width-850, height-750, width, height-750)
+    glPointSize(200)
+    draw_line(width-850, height-300, width, height-300)
 def healthbar():
     global health
     a=-(xaxis-50)
@@ -494,12 +577,17 @@ def showScreen():
     global health,unhappy
     glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
+    draw_window()
+    fireworkDisplay()
+    toclear()
     draw_cat()
     draw_foodpan()
     healthbar()
     draw_bed()
     playbutton()
-    draw_window()
+    windowcross()
+    
+    
     if play==True and sleep==False:
         playroomtoys()
     if health<=0 and unhappy==False:
@@ -509,7 +597,7 @@ def showScreen():
         unhappy=False    
     glutSwapBuffers()
 def mouseFunc(button, state, x, y):
-    global play, food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
+    global firework, fireworksCircleSpeed, fireworkCircleRadius, play, food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
     nose=(cat_x,cat_y-195)
     a = x-(600/2) 
     b = (600 /2)-y
@@ -591,9 +679,19 @@ def mouseFunc(button, state, x, y):
                     print("To play, you need to eat first.")
             else:
                 play = False
+    #fireworks
+    if play == True and button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
+       if  -width + 400 <= a <= width - 400 and height-600<=b<=height-400:
+            fireworkLst.append([a, b, 3]) #initial radius 3
+    glutIdleFunc(fireworks_animate)
+    # glutPostRedisplay()
+def fireworks_animate():
+    global fireworkCircleRadius, fireworksCircleSpeed
 
-    
-    glutPostRedisplay()
+    if len(fireworkLst) > 0:
+        for i in range(len(fireworkLst)):
+            fireworkLst[i][2] += fireworksCircleSpeed
+        glutPostRedisplay()
 
 def come_down(val):
     global cat_y, hungry 
@@ -679,11 +777,15 @@ glutInitWindowSize(width, height)
 glutInitWindowPosition(0,0)
 wind =glutCreateWindow(b"PET CARE") 
 init()
-glutDisplayFunc(showScreen)   
+glutDisplayFunc(showScreen) 
 glutSpecialFunc(specialKeyListener)
 glutMouseFunc(mouseFunc)
+
+
+
 glutKeyboardFunc(keyboardListener) 
 glutTimerFunc(3000, hungry_announce, 0)
 glutTimerFunc(3000, sleep_announce, 0)
 glutTimerFunc(3000, day_announce, 0)
+glutTimerFunc(20, fireworks_animate, 0)
 glutMainLoop()
