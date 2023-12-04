@@ -10,6 +10,10 @@ xaxis= width/2
 yaxis =height/2
 cat_x = 0.0
 cat_y = -50
+fish_x = random.uniform(width-850, width - 350) #width-850
+fish_y = -100
+fish_xbutton = width -350
+fish_ybutton = 170
 food =[]
 food_pan_empty = False
 eating = False
@@ -24,6 +28,10 @@ d2n = True
 n2d = False
 play = False
 ballx=-280
+ballbutton = -280
+ballbuttonON = False
+fishON = False
+fishgamepoint = 0
 goal=True
 fireworkCircleRadius = 0.5
 fireworksCircleSpeed = 6
@@ -407,9 +415,23 @@ def windowcross():
         draw_line(width -700, height - 402, width - 700, height-598)
         draw_line(-width + 400, height - 502, width - 400, height-502)
         draw_line(width -500, height - 402, width - 500, height-598)
-
+def draw_fish():
+    if play == True and fishON == True:
+        global fish_x, fish_y
+        glPointSize(2)
+        glColor3f(0.0, 0.0, 1.0)  # Set color to blue
+        draw_line(fish_x - 15, fish_y, fish_x + 15, fish_y)
+        draw_line(fish_x - 15, fish_y-20, fish_x + 15, fish_y-20)
+        draw_line(fish_x - 15, fish_y, fish_x - 27, fish_y - 10)
+        draw_line(fish_x - 15, fish_y-20, fish_x - 27, fish_y - 10)
+        draw_line(fish_x + 15, fish_y, fish_x + 40, fish_y - 15)
+        draw_line(fish_x + 15, fish_y-20, fish_x + 40, fish_y-5)
+        draw_line(fish_x + 40, fish_y - 15, fish_x + 40, fish_y-5)
+        #eye
+        circle(1, (fish_x - 12, fish_y -7))
+    
 def playbutton():
-    global play
+    global play, fish_xbutton, fish_ybutton
     glColor3f(0,0.4,1)
     glPointSize(2)
     #box
@@ -460,27 +482,67 @@ def playbutton():
         draw_line(width - 331, height - 361, width-331, height-356)
         draw_line(width - 335, height - 355,width - 331, height - 356)
         draw_line(width - 331, height - 361, width-335, height-361)
+        #ballbutton
+        if ballbuttonON == False:
+            glPointSize(4)
+            glColor3f(1,0,0)
+            circle(16,(-ballbutton-30,200))
+            glColor3f(1,0,1)
+            circle(11,(-ballbutton-30,200))
+            glColor3f(1,0,0)
+            circle(7,(-ballbutton-30,200))
+            circle(4,(-ballbutton-30,200))
+        if ballbuttonON == True:
+            glPointSize(8)
+            glColor3f(1,0,0)
+            circle(16,(-ballbutton-30,200))
+            circle(12,(-ballbutton-30,200))
+            circle(8,(-ballbutton-30,200))
+            circle(5,(-ballbutton-30,200))
+        #fishbutton
+        if fishON == False:
+            glPointSize(2)
+            glColor3f(0.0, 0.0, 1.0)  # Set color to blue
+            draw_line(fish_xbutton - 15, fish_ybutton, fish_xbutton + 15, fish_ybutton)
+            draw_line(fish_xbutton - 15, fish_ybutton-20, fish_xbutton + 15, fish_ybutton-20)
+            draw_line(fish_xbutton - 15, fish_ybutton, fish_xbutton - 27, fish_ybutton - 10)
+            draw_line(fish_xbutton - 15, fish_ybutton-20, fish_xbutton - 27, fish_ybutton - 10)
+            draw_line(fish_xbutton + 15, fish_ybutton, fish_xbutton + 40, fish_ybutton - 15)
+            draw_line(fish_xbutton + 15, fish_ybutton-20, fish_xbutton + 40, fish_ybutton-5)
+            draw_line(fish_xbutton + 40, fish_ybutton - 15, fish_xbutton + 40, fish_ybutton-5)
+            #eye
+            circle(1, (fish_xbutton - 12, fish_ybutton -7))
+        if fishON == True:
+            glPointSize(8)
+            glColor3f(1,0,0)
+            circle(16,(-ballbutton-30,150))
+            circle(12,(-ballbutton-30,150))
+            circle(8,(-ballbutton-30,150))
+            circle(5,(-ballbutton-30,150))
+
 def playroomtoys():
     #ball
-    glPointSize(4)
-    glColor3f(1,0,0)
-    circle(16,(ballx,-275))
-    glColor3f(1,0,1)
-    circle(11,(ballx,-275))
-    glColor3f(1,0,0)
-    circle(7,(ballx,-275))
-    circle(4,(ballx,-275))
-    #goalpost
-    if goal==True:
-        glColor3f(0,0,0)
-        draw_line(290,-290,290,-220)
-        draw_line(250,-280,250,-210)
-        draw_line(290,-220,250,-210)
-    else:
-        glColor3f(0,0,0)
-        draw_line(-290,-290,-290,-220)
-        draw_line(-250,-280,-250,-210)
-        draw_line(-290,-220,-250,-210)
+    if ballbuttonON == True:
+        glPointSize(4)
+        glColor3f(1,0,0)
+        circle(16,(ballx,-275))
+        glColor3f(1,0,1)
+        circle(11,(ballx,-275))
+        glColor3f(1,0,0)
+        circle(7,(ballx,-275))
+        circle(4,(ballx,-275))
+        #goalpost
+        if goal==True:
+            glColor3f(0,0,0)
+            draw_line(290,-290,290,-220)
+            draw_line(250,-280,250,-210)
+            draw_line(290,-220,250,-210)
+        else:
+            glColor3f(0,0,0)
+            draw_line(-290,-290,-290,-220)
+            draw_line(-250,-280,-250,-210)
+            draw_line(-290,-220,-250,-210)
+        
 def fcircle(radius,center): #(5,(1,2))
     for _ in range(10):
         d=1-radius
@@ -586,6 +648,7 @@ def showScreen():
     draw_bed()
     playbutton()
     windowcross()
+    draw_fish()
     
     
     if play==True and sleep==False:
@@ -597,11 +660,25 @@ def showScreen():
         unhappy=False    
     glutSwapBuffers()
 def mouseFunc(button, state, x, y):
-    global firework, fireworksCircleSpeed, fireworkCircleRadius, play, food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
+    global fishgamepoint, fish_x, fish_y, fishON, ballbuttonON, ballbutton, firework, fireworksCircleSpeed, fireworkCircleRadius, play, food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
     nose=(cat_x,cat_y-195)
     a = x-(600/2) 
     b = (600 /2)-y
     zzz = False
+    if play == True and width-370<=a<=width-320 and height-410<=b<=height-390:
+        if fishON == False and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and ballbuttonON == False:
+            ballbuttonON = True
+        elif fishON == False and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and ballbuttonON == True:
+            ballbuttonON = False
+
+    if play == True and width-370<=a<=width-320 and height-460<=b<=height-420:
+        if fishON == False and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and ballbuttonON == False:
+            fishON = True
+        elif fishON == True and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and ballbuttonON == False:
+            fishON = False
+            print("Fishing Game Final Score: ",fishgamepoint)
+            fishgamepoint = 0
+           
     #eat or not eat xaxis = 300, yaxis = 300
     if play == False and (xaxis-80) <= a <= (xaxis-6) and -(yaxis-11) <= b <= -(yaxis-30)  and 170<=cat_x<=230:
         if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
@@ -641,13 +718,6 @@ def mouseFunc(button, state, x, y):
 
     else:
         eating=False    
-    #nose=(cat_x,cat_y-195)        
-    if nose[0]-5 <=a<= nose[0]+5 and nose[1]-5 <=b<= nose[1]+5 and sleep == False:
-        if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-            cat_y+=70
-            glutTimerFunc(300, come_down, 0)
-
-    #sleep or no sleep
 
     if play == False and 0<=x<=100 and height-40<=y<=height and -xaxis+60 <=cat_x<-xaxis+160:
         if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
@@ -657,15 +727,15 @@ def mouseFunc(button, state, x, y):
                 print("Eat first.")
             else:
                 zzz = True
-    if zzz == True and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and sleep == False:
-        sleep = True
-        cat_y += 20
-        cat_x = -230
-    if sleep == True and button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
-        sleep = False
-        cat_y -= 20
-        if day <= 0.4:
-            print('Sleep some more.')
+        if zzz == True and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and sleep == False:
+            sleep = True
+            cat_y += 20
+            cat_x = -230
+        elif sleep == True and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
+            sleep = False
+            cat_y -= 20
+            if day <= 0.4:
+                print('Sleep some more.')
     
     if width-370<=a<=width-320 and height-370<=b<=height-350:
         if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
@@ -679,12 +749,20 @@ def mouseFunc(button, state, x, y):
                     print("To play, you need to eat first.")
             else:
                 play = False
+                if fishON == True:
+                    print("Fishing game Final Score: ", fishgamepoint)
+                    fishON = False
+                ballbuttonON = False
+    
+    
+
+
     #fireworks
     if play == True and button == GLUT_RIGHT_BUTTON and state == GLUT_DOWN:
        if  -width + 400 <= a <= width - 400 and height-600<=b<=height-400:
             fireworkLst.append([a, b, 3]) #initial radius 3
     glutIdleFunc(fireworks_animate)
-    # glutPostRedisplay()
+    
 def fireworks_animate():
     global fireworkCircleRadius, fireworksCircleSpeed
 
@@ -695,16 +773,27 @@ def fireworks_animate():
 
 def come_down(val):
     global cat_y, hungry 
-    cat_y-=70
+    if cat_y > -50:
+        cat_y-=70
     hungry+=0.5
     glutPostRedisplay()    
 def specialKeyListener(key,x, y):
-    global cat_x
+    global sleep, cat_x, cat_y, fish_x, fish_y, fishON, fishgamepoint
 
     if key== GLUT_KEY_LEFT and cat_x >= -xaxis+62 and sleep == False:
         cat_x -= 10.0
     if key== GLUT_KEY_RIGHT and cat_x <= xaxis-62 and sleep == False:
         cat_x += 10.0
+    if sleep == False and key == GLUT_KEY_UP:
+        if cat_y < 20:
+            cat_y+=70
+        glutTimerFunc(300, come_down, 0)
+    if fishON == True:
+        if cat_x-62<=fish_x+40 and cat_y-127 >=fish_y-20:
+            fishgamepoint += 1
+            print("point: ", fishgamepoint)
+            fish_x = random.uniform(width-850, width - 350) #width-850
+            fish_y = -100
 
     glutPostRedisplay() 
 def keyboardListener(key, x,y):
@@ -780,9 +869,6 @@ init()
 glutDisplayFunc(showScreen) 
 glutSpecialFunc(specialKeyListener)
 glutMouseFunc(mouseFunc)
-
-
-
 glutKeyboardFunc(keyboardListener) 
 glutTimerFunc(3000, hungry_announce, 0)
 glutTimerFunc(3000, sleep_announce, 0)
