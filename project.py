@@ -32,6 +32,7 @@ ballbutton = -280
 ballbuttonON = False
 fishON = False
 fishgamepoint = 0
+ballgamepoint = 0
 goal=True
 fireworkCircleRadius = 0.5
 fireworksCircleSpeed = 6
@@ -660,7 +661,7 @@ def showScreen():
         unhappy=False    
     glutSwapBuffers()
 def mouseFunc(button, state, x, y):
-    global fishgamepoint, fish_x, fish_y, fishON, ballbuttonON, ballbutton, firework, fireworksCircleSpeed, fireworkCircleRadius, play, food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
+    global fishgamepoint, ballgamepoint, fish_x, fish_y, fishON, ballbuttonON, ballbutton, firework, fireworksCircleSpeed, fireworkCircleRadius, play, food_pan_empty, food, eating, cat_x,cat_y, nose, hungry, health, unhappy, sleep, day
     nose=(cat_x,cat_y-195)
     a = x-(600/2) 
     b = (600 /2)-y
@@ -670,7 +671,8 @@ def mouseFunc(button, state, x, y):
             ballbuttonON = True
         elif fishON == False and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and ballbuttonON == True:
             ballbuttonON = False
-
+            print("Ball Game Final Score: ",ballgamepoint)
+            ballgamepoint=0
     if play == True and width-370<=a<=width-320 and height-460<=b<=height-420:
         if fishON == False and button == GLUT_LEFT_BUTTON and state == GLUT_DOWN and ballbuttonON == False:
             fishON = True
@@ -798,19 +800,21 @@ def specialKeyListener(key,x, y):
 
     glutPostRedisplay() 
 def keyboardListener(key, x,y):
-    global ballx,cat_x,goal
+    global ballx,cat_x,goal,ballgamepoint
     if play==True and key== b'w' and abs(cat_x-ballx)<=40:
         ballx+=40
         if ballx>270:
             ballx=280
             goal=False
-            print("Yay goal!")
+            ballgamepoint+=1
+            print("Yay goal! Score:",ballgamepoint)
     if play==True and key== b'q' and abs(cat_x-ballx)<=40:     
         ballx-=40
         if ballx<-270:
             ballx=-280  
             goal=True 
-            print("Yay goal!")
+            ballgamepoint+=1
+            print("Yay goal! Score:",ballgamepoint)
         
           
     glutPostRedisplay()         
@@ -837,7 +841,7 @@ def sleep_announce(val):
     
     glutPostRedisplay()   
 def day_announce(val):
-    global day, d2n, n2d, sleep
+    global day, d2n, n2d, sleep, health
     glutTimerFunc(6000, day_announce, 0)
     if day <= 0.1:
         n2d = True
@@ -851,6 +855,7 @@ def day_announce(val):
         day -= 0.1
     if day <=0.4 and sleep == False:
         print("Time to sleep.")
+        health-=1
     if day >=0.7 and sleep == True:
         print('Time to wakey wakey.')
     glutPostRedisplay()
