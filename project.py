@@ -800,21 +800,32 @@ def specialKeyListener(key,x, y):
 
     glutPostRedisplay() 
 def keyboardListener(key, x,y):
-    global ballx,cat_x,goal,ballgamepoint
+    global ballx,cat_x,goal,ballgamepoint,health,ballbuttonON
     if play==True and key== b'w' and abs(cat_x-ballx)<=40:
-        ballx+=40
-        if ballx>270:
-            ballx=280
-            goal=False
-            ballgamepoint+=1
-            print("Yay goal! Score:",ballgamepoint)
-    if play==True and key== b'q' and abs(cat_x-ballx)<=40:     
-        ballx-=40
-        if ballx<-270:
-            ballx=-280  
-            goal=True 
-            ballgamepoint+=1
-            print("Yay goal! Score:",ballgamepoint)
+        if health<=1:
+            ballbuttonON=False
+            print("Game over")
+            
+        else:    
+            ballx+=40
+            if ballx>270:
+                ballx=280
+                goal=False
+                ballgamepoint+=1
+                print("Yay goal! Score:",ballgamepoint)
+        
+    if play==True and key== b'q' and abs(cat_x-ballx)<=40:  
+        if health<=1:
+            ballbuttonON=False
+            print("Game over")
+            
+        else:   
+            ballx-=40
+            if ballx<-270:
+                ballx=-280  
+                goal=True 
+                ballgamepoint+=1
+                print("Yay goal! Score:",ballgamepoint)
         
           
     glutPostRedisplay()         
