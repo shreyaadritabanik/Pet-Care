@@ -437,6 +437,7 @@ def draw_fish():
         #eye
         circle(1, (fish_x - 12, fish_y -7))
 
+
     
 def playbutton():
     global play, fish_xbutton, fish_ybutton
@@ -595,7 +596,7 @@ def fcirclepoints(x,y,center):
      
 def fireworkDisplay():
     v = None
-    global firework, fireworkLst, fireworkCircleRadius
+    global firework, fireworkLst, fireworkCircleRadius, height
     if play == True and len(fireworkLst) > 0:
         firework = True
     else:
@@ -610,9 +611,9 @@ def fireworkDisplay():
 def toclear():  
     glColor3f(1,1,1)
     glPointSize(200)
-    draw_line(width-300, height+700, width-300, height-900)
+    draw_line(width-300, height+700, width-300, height-1500)
     glPointSize(100)
-    draw_line(width-850, height+700, width-850, height-900)
+    draw_line(width-850, height+700, width-850, height-1500)
     glPointSize(300)
     draw_line(width-850, height-750, width, height-750)
     glPointSize(200)
@@ -786,9 +787,9 @@ def fish_animate(val):
     if fishON == True:
         if left == False:
             
-            fish_x -= 0.5
+            fish_x -= 5
         else:
-            fish_x += 0.5
+            fish_x += 5 #left er dike ase, tai right e jabe
             
 
         if fish_x > width - 350 or fish_x < width - 850:
@@ -894,7 +895,7 @@ def sleep_announce(val):
     glutPostRedisplay()   
 def day_announce(val):
     global day, d2n, n2d, sleep, health
-    glutTimerFunc(6000, day_announce, 0)
+    glutTimerFunc(5000, day_announce, 0)
     if day <= 0.1:
         n2d = True
         d2n = False
@@ -913,7 +914,6 @@ def day_announce(val):
     glutPostRedisplay()
 
 
-     
 glutInit()
 glutInitDisplayMode(GLUT_RGBA)
 glutInitWindowSize(width, height) 
@@ -927,7 +927,7 @@ glutMouseFunc(mouseFunc)
 glutKeyboardFunc(keyboardListener) 
 glutTimerFunc(3000, hungry_announce, 0)
 glutTimerFunc(3000, sleep_announce, 0)
-glutTimerFunc(3000, day_announce, 0)
+glutTimerFunc(5000, day_announce, 0)
 glutTimerFunc(20, fish_animate, 0)
 glutTimerFunc(20, fireworks_animate, 0)
 glutMainLoop()
